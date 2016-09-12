@@ -11,6 +11,7 @@ apply from: '../gradle-scripts/utils.gradle'
 apply from: '../gradle-scripts/dependency-updates.gradle'
 apply from: '../gradle-scripts/apk-name-changer.gradle'
 apply from: '../gradle-scripts/travis.gradle'
+apply from: '../gradle-scripts/signing.gradle'
 
 project.ext.set("apkNameAddition", "github-client")
 
@@ -19,6 +20,14 @@ android {
   compileSdkVersion versions.compileSdk
   buildToolsVersion versions.buildTools
 
+  signingConfigs {
+    release {
+      storeFile file(keyPath())
+      storePassword keystorePassword()
+      keyAlias keyAlias()
+      keyPassword keyPassword()
+    }
+  }
   dexOptions {
     // Specify the heap size for the dex process
     javaMaxHeapSize "4g"

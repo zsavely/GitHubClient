@@ -1,0 +1,25 @@
+def keystorePassword() {
+  def keyStorePassword = System.getenv("KEYSTORE_PASSWORD");
+  return String.valueOf(keyStorePassword);
+}
+
+def keyPassword() {
+  def keyPassword = System.getenv("KEY_PASSWORD");
+  return String.valueOf(keyPassword);
+}
+
+def keyAlias() {
+  def keyAlias = System.getenv("KEY_ALIAS");
+  return String.valueOf(keyAlias);
+}
+
+def String keyPath() {
+  return "github-app.jks";
+}
+
+ext {
+  keystorePassword = this.&keystorePassword
+  keyPassword = this.&keyPassword
+  keyAlias = this.&keyAlias
+  keyPath = this.&keyPath
+}

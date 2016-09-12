@@ -43,8 +43,8 @@ notifications:
   email: true
 
 after_failure:
-- "cat /home/travis/build/zsavely/ClipdAndroid/clipdapp/build/outputs/lint-results-debug.xml"
-- "cat /home/travis/build/zsavely/ClipdAndroid/clipdapp/build/outputs/lint-results-release.xml"
+  - "cat /home/travis/build/zsavely/ClipdAndroid/clipdapp/build/outputs/lint-results-debug.xml"
+  - "cat /home/travis/build/zsavely/ClipdAndroid/clipdapp/build/outputs/lint-results-release.xml"
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -57,6 +57,16 @@ cache:
     - $HOME/.gradle/wrapper/
 
 after_success:
+  - sh set_tags.sh
   - codecov
 
-
+deploy:
+  provider: releases
+  api_key:
+    secure: R3U1icl6nCRVN/6GwfQ4hW14HqhYGSF37mDCAqhvJo3OCNdrQhrUVOOB918qP8ljOoZAymjKphNHgtkUEgD4ZzktGOQv9rznZzKfy0SjFGB+jTu4PNk7BIg6qBfY78bYNEROEAG+68hmfZy/MasY/9um7IZ+VNnTEITee94tzOJ6ZZp24pf9hX3J7tiW1qzf7DCBQLdrwI2qHlHU+NHXSVdliydzLBELVU4yLOzrEDys9mK/v7MlariEFFv71sD+P6U6nzEOckyg2v50dEgtefhk+2SICJJxv9nPucb0WcBJur/RkA4p92W/r7GylqzueXctUTQSGDd8hByz7lIaP2MffWfeBy+rojWF9IGrjSr/guPUp8ITdfKWcC0Ykf+dkEkEju02Jy4WmBaoVIqwH1Gx5TpHnjvvDO477veGCIrL8gXa/U4XUvWfco6+f/BIqkI3FlOl2TQ1qToRgDg6a37eobKgZuCdOB59UIqkUy3aTLJ5vHwK75VRYguBUTiN5eAehYmol3OV7KGyWyiBw9glx4X2uuTpmusY/CTK1rAGXqaTJ9n2VRV5vBbCh28P2M8cISttsnDhDx5VG0r3z5sA/0jGGQNfl475WEKz0LKXIX8g5gL7RUlUfRh1mRmcdPWxyuGSiIPzHtRTmTJt+iiW8iZZMj17oIdaI5A4WdY=
+  file: "app/build/outputs/apk/github-client*release*.apk"
+  file_glob: true
+  skip_cleanup: true
+  on:
+    branch: master
+    repo: zsavely/GitHubClient
