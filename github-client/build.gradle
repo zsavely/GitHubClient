@@ -24,9 +24,9 @@ android {
   signingConfigs {
     release {
       storeFile file(keyPath())
-      storePassword keystorePassword()
-      keyAlias keyAlias()
-      keyPassword keyPassword()
+      storePassword keystorePassword("KEYSTORE_PASSWORD")
+      keyAlias keystorePassword("KEY_ALIAS")
+      keyPassword keystorePassword("KEY_PASSWORD")
     }
   }
   dexOptions {

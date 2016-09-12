@@ -1,25 +1,22 @@
-def keystorePassword() {
-  def keyStorePassword = System.getenv("KEYSTORE_PASSWORD");
-  return String.valueOf(keyStorePassword);
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+def String keystorePassword(String value) {
+  Properties properties = new Properties()
+  def exists = project.rootProject.file('keystore.properties').exists()
+  if (exists) {
+    properties.load(project.rootProject.file('keystore.properties').newDataInputStream())
+    return properties.getProperty(value)
+  } else {
+    return System.getenv(value)
+  }
 }
 
-def keyPassword() {
-  def keyPassword = System.getenv("KEY_PASSWORD");
-  return String.valueOf(keyPassword);
-}
-
-def keyAlias() {
-  def keyAlias = System.getenv("KEY_ALIAS");
-  return String.valueOf(keyAlias);
-}
-
-def String keyPath() {
+def keyPath() {
   return "github-app.jks";
 }
 
 ext {
   keystorePassword = this.&keystorePassword
-  keyPassword = this.&keyPassword
-  keyAlias = this.&keyAlias
   keyPath = this.&keyPath
 }
