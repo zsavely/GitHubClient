@@ -8,6 +8,11 @@ env:
     - ANDROID_TARGET_21=android-21
     - ANDROID_ABI=armeabi-v7a
 
+branches:
+  # Disable building tag builds.
+  except:
+  - "/^v\\d/"
+
 android:
   components:
     - tools
@@ -57,7 +62,7 @@ cache:
     - $HOME/.gradle/wrapper/
 
 after_success:
-  - sh set_tags.sh
+  - sh scripts/set_tags.sh
   - codecov
 
 deploy:
