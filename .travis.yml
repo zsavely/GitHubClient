@@ -1,0 +1,62 @@
+sudo: required
+
+language: android
+jdk: oraclejdk8
+
+env:
+ global:
+    - ANDROID_TARGET_22=android-22
+    - ANDROID_ABI=armeabi-v7a
+
+android:
+  components:
+    - tools
+    - tools
+    - platform-tools
+    - android-24
+    - build-tools-24.0.2
+    - extra-android-m2repository
+    - sys-img-${ANDROID_ABI}-${ANDROID_TARGET_22}
+
+before_install:
+ - chmod +x gradlew
+ - pip install --user codecov
+
+script:
+    # Create an emulator.
+  - echo no | android create avd --force -n test2 -t ${ANDROID_TARGET_22} --abi ${ANDROID_ABI}
+
+    # Start the first emulator.
+  - emulator -avd test2 -no-skin -no-audio -no-window &
+  - sh scripts/wait-for-emulator.sh
+
+    # Just to check whether the device is seen by ADB.
+  - "adb devices"
+
+    # Unlock the device.
+  - adb -s emulator-5554 shell input keyevent 82 &
+
+    # Run the script.
+  - sh scripts/script.sh
+
+notifications:
+  email: true
+
+after_failure:
+- "cat /home/travis/build/zsavely/ClipdAndroid/clipdapp/build/outputs/lint-results-debug.xml"
+- "cat /home/travis/build/zsavely/ClipdAndroid/clipdapp/build/outputs/lint-results-release.xml"
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gradle
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+after_success:
+  - codecov
+
+

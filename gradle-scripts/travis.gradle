@@ -1,0 +1,12 @@
+def buildNumber() {
+  def travisBuildNumber = System.getenv("TRAVIS_BUILD_NUMBER");
+  if (travisBuildNumber != null) {
+    return Integer.valueOf(travisBuildNumber)
+  } else {
+    return versions.code
+  }
+}
+
+ext {
+  buildNumber = this.&buildNumber
+}

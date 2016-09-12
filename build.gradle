@@ -1,0 +1,41 @@
+apply from: 'dependencies.gradle'
+buildscript {
+  apply from: 'dependencies.gradle'
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath gradlePlugins.android
+    classpath gradlePlugins.apt
+    classpath gradlePlugins.jacoco
+    classpath gradlePlugins.hugo
+    classpath gradlePlugins.dexCount
+    classpath gradlePlugins.gradleVersionsPlugin
+  }
+}
+
+allprojects {
+  repositories {
+    jcenter()
+  }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.14.1'
+}
+
+task clean(type: Delete) {
+  delete rootProject.buildDir
+}
+
+subprojects {
+  // Log instrumentation tests results.
+  tasks.withType(com.android.build.gradle.internal.tasks.AndroidTestTask) { task ->
+    doFirst {
+      logging.captureStandardOutput LogLevel.INFO
+    }
+    doLast {
+      logging.captureStandardOutput LogLevel.LIFECYCLE
+    }
+  }
+}

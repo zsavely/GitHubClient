@@ -1,0 +1,69 @@
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
+def final Date buildDate = new Date();
+project.ext.set("buildDate", buildDate)
+
+def long getBuildDateLong(Date date) {
+  return date.getTime();
+}
+
+def String getBuildDateString(Date date) {
+  DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss z", Locale.getDefault());
+  dateFormat.setTimeZone(TimeZone.getDefault());
+  return dateFormat.format(date);
+}
+
+def gitLocalSha() {
+  def p = 'git rev-parse --short HEAD'.execute([], project.rootDir)
+  p.waitFor()
+  if (p.exitValue() != 0) {
+    logger.warn(p.errorStream.text)
+    return "empty";
+  }
+
+  return p.text.trim()
+}
+
+def gitTimestamp() {
+  def p = 'git log -n 1 --format=%at'.execute([], rootDir)
+  p.waitFor()
+  if (p.exitValue() != 0) {
+    logger.warn(p.errorStream.text)
+    return -1;
+  }
+
+  return p.text.trim()
+}
+
+def String gitTimestampString() {
+  def p = 'git log -n 1 --format=%at'.execute([], rootDir)
+  p.waitFor()
+  if (p.exitValue() != 0) {
+    logger.warn(p.errorStream.text)
+    return "empty";
+  }
+
+  DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss z", Locale.getDefault());
+  dateFormat.setTimeZone(TimeZone.getDefault());
+
+  return dateFormat.format(new Date(1000L * Long.parseLong(p.text.trim())));
+}
+
+def boolean isCi() {
+  return "true".equals(System.getenv("CI"));
+}
+
+def boolean isPreDexEnabled() {
+  return "true".equals(System.getProperty("pre-dex", "true"));
+}
+
+ext {
+  isCi = this.&isCi
+  isPreDexEnabled = this.&isPreDexEnabled
+  getBuildDateLong = this.&getBuildDateLong
+  getBuildDateString = this.&getBuildDateString
+  gitLocalSha = this.&gitLocalSha
+  gitTimestamp = this.&gitTimestamp
+  gitTimestampString = this.&gitTimestampString
+}

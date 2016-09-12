@@ -1,0 +1,13 @@
+def minSdk() {
+  def minSdkPropertyName = 'com.szagurskii.githubclient.minSdk'
+  def realMinSdk = versions.minSdk
+
+  project.hasProperty(minSdkPropertyName) ?
+      project.property(minSdkPropertyName)
+      : realMinSdk
+}
+
+// Export methods by turning them into closures
+ext {
+  minSdk = this.&minSdk
+}

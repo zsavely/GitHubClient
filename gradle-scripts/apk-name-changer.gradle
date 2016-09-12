@@ -1,0 +1,20 @@
+/** Change APK name. */
+android.applicationVariants.all { variant ->
+  for (output in variant.outputs) {
+    def outputFile = output.outputFile
+    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+      // Get flavor from the application variant.
+      def flavor = "";
+      if (!variant.productFlavors.isEmpty()) {
+        flavor = variant.productFlavors.get(0).name;
+      }
+
+      // If this is a release version of APK, fully rename the file.
+      if ("release".equals(buildType.name) && isCi) {
+        def fileName = "${project.apkNameAddition}-${versionCode}-${versionName}-${buildType.name}-${gitLocalSha()}.apk"
+        //noinspection GroovyAssignabilityCheck
+        output.outputFile = new File(outputFile.parent, fileName)
+      }
+    }
+  }
+}

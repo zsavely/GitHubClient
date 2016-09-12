@@ -1,0 +1,125 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.jakewharton.hugo'
+apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'com.github.ben-manes.versions'
+
+apply from: '../gradle-scripts/versions.gradle'
+apply from: '../gradle-scripts/unaligned-deleter.gradle'
+apply from: '../gradle-scripts/min-sdk-hack.gradle'
+apply from: '../gradle-scripts/utils.gradle'
+apply from: '../gradle-scripts/dependency-updates.gradle'
+apply from: '../gradle-scripts/apk-name-changer.gradle'
+apply from: '../gradle-scripts/travis.gradle'
+
+project.ext.set("apkNameAddition", "github-client")
+
+android {
+  // Declared in dependencies.gradle in the root of the project.
+  compileSdkVersion versions.compileSdk
+  buildToolsVersion versions.buildTools
+
+  dexOptions {
+    // Specify the heap size for the dex process
+    javaMaxHeapSize "4g"
+
+    // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
+    preDexLibraries = isPreDexEnabled() && !isCi()
+  }
+  defaultConfig {
+    applicationId "com.szagurskii.githubclient"
+
+    buildConfigField 'String', 'BUILD_DATE_STRING', "\"${getBuildDateString(project.buildDate)}\""
+    buildConfigField 'long', 'BUILD_DATE_LONG', "${getBuildDateLong(project.buildDate)}L"
+    buildConfigField 'String', 'GIT_SHA', "\"${gitLocalSha()}\""
+    buildConfigField 'long', 'GIT_UNIX_TIMESTAMP', "${gitTimestamp()}L"
+    buildConfigField 'String', 'GIT_TIMESTAMP_STRING', "\"${gitTimestampString()}\""
+
+    minSdkVersion minSdk()
+    targetSdkVersion versions.targetSdk
+
+    // Notice that you may want to use BUILD_NUMBER from CI in real project with own CI.
+    versionCode buildNumber()
+    versionName versions.name
+
+    // User vector resources.
+    vectorDrawables.useSupportLibrary = true
+
+    // Define custom test runner.
+    testInstrumentationRunner 'com.szagurskii.githubclient.CustomTestRunner'
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+  }
+  buildTypes {
+    debug {
+      testCoverageEnabled true
+      applicationIdSuffix ".debug"
+      versionNameSuffix "-debug-${gitLocalSha()}"
+    }
+    release {
+      minifyEnabled true
+      shrinkResources true
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+  lintOptions {
+    lintConfig file("lint.xml")
+
+    warningsAsErrors true
+    abortOnError true
+
+    disable 'InvalidPackage' // Okio references java.nio that does not presented in Android SDK.
+  }
+  testOptions {
+    unitTests.all {
+      testLogging {
+        events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        exceptionFormat 'full'
+      }
+    }
+  }
+  dataBinding {
+    enabled = true
+  }
+  packagingOptions {
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+    exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+  }
+}
+
+dependencies {
+  compile libraries.supportAppCompat
+  compile libraries.supportRecyclerView
+  compile libraries.supportDesign
+  compile libraries.supportAnnotations
+
+  // Testing tools
+  testCompile libraries.supportAppCompat
+  testCompile libraries.supportDesign
+  testCompile libraries.okio
+  testCompile testingLibraries.okHttpMockWebServer
+  testCompile testingLibraries.junit
+  testCompile testingLibraries.robolectric
+  testCompile testingLibraries.assertJ
+  testCompile testingLibraries.equalsVerifier
+  testCompile testingLibraries.mockitoCore
+
+  androidTestCompile libraries.supportAppCompat
+  androidTestCompile libraries.supportRecyclerView
+  androidTestCompile libraries.supportDesign
+  androidTestCompile libraries.supportAnnotations
+  androidTestCompile testingLibraries.supportTestRunner
+  androidTestCompile testingLibraries.supportTestRules
+  androidTestCompile testingLibraries.espressoCore
+  androidTestCompile testingLibraries.espressoContrib
+  androidTestCompile testingLibraries.espressoWeb
+  androidTestCompile testingLibraries.espressoIdlingResource
+  androidTestCompile testingLibraries.espressoIntents
+}

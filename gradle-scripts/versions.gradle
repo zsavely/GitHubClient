@@ -1,0 +1,27 @@
+def int getVivusVersionCode(int versionCode) {
+  def versionCodeTeamCity = System.getProperty("build.number");
+
+  // Set the version code of the application to the specified build number of the TeamCity
+  if (versionCodeTeamCity != null) {
+    return Integer.parseInt(versionCodeTeamCity)
+  } else {
+    return versionCode
+  }
+}
+
+def String getVivusVersionName(String versionName, int versionCode) {
+  def versionCodeTeamCity = System.getProperty("build.number");
+
+  // Set the version code of the application to the specified build number of the TeamCity
+  if (versionCodeTeamCity != null) {
+    return versionName + (".") + versionCodeTeamCity
+  } else {
+    return versionName + (".") + versionCode
+  }
+}
+
+// Export methods by turning them into closures
+ext {
+  getVivusVersionCode = this.&getVivusVersionCode
+  getVivusVersionName = this.&getVivusVersionName
+}
