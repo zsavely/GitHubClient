@@ -12,6 +12,7 @@ apply from: '../gradle-scripts/dependency-updates.gradle'
 apply from: '../gradle-scripts/apk-name-changer.gradle'
 apply from: '../gradle-scripts/travis.gradle'
 apply from: '../gradle-scripts/signing.gradle'
+apply from: '../gradle-scripts/jacoco.gradle'
 
 project.ext.set("apkNameAddition", "github-client")
 
