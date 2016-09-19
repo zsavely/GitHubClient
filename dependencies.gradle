@@ -24,7 +24,7 @@ ext.versions = [
     // Application dependencies.
     supportLibs                   : '24.2.1',
     dataBinding                   : '1.2.1',
-    dagger2                       : '2.6.1',
+    dagger2                       : '2.7',
 
     okhttp                        : '3.4.1',
     retrofit                      : '2.1.0',
@@ -41,13 +41,12 @@ ext.versions = [
     timber                        : '4.3.0',
     picasso2OkHttp3Downloader     : '1.0.2',
 
-    transitionsEverywhere         : '1.6.5',
-    rxClipboard                   : '1.0.2',
+    transitionsEverywhere         : '1.6.9',
     adapterDelegates              : '2.0.1',
     fragmentArgs                  : '3.0.2',
     eventBus                      : '3.0.0',
     icePick                       : '3.2.0',
-    crashlytics                   : '2.6.2',
+    crashlytics                   : '2.6.3',
     googlePlayServices            : '9.4.0',
     firebaseMessaging             : '9.4.0',
 
@@ -55,8 +54,8 @@ ext.versions = [
     parceler                      : '1.1.5',
 
     // Helper dependencies.
-    stetho                        : '1.3.1',
-    leakCanary                    : '1.3.1',
+    stetho                        : '1.4.1',
+    leakCanary                    : '1.4',
     tinyDancer                    : '0.0.9',
     lynx                          : '1.6',
     processPhoenix                : '1.0.2',
