@@ -23,7 +23,6 @@ ext.versions = [
 
     // Application dependencies.
     supportLibs                   : '24.2.1',
-    dataBinding                   : '1.2.1',
     dagger2                       : '2.7',
 
     okhttp                        : '3.4.1',
@@ -61,7 +60,7 @@ ext.versions = [
     processPhoenix                : '1.0.2',
 
     // Gradle Plugins.
-    androidGradlePlugin           : '2.1.3',
+    androidGradlePlugin           : '2.2.0',
     googlePlayServicesGradlePlugin: '3.0.0',
     androidDevMetricsGradlePlugin : '0.4',
     androidRealmPlugin            : '1.0.0',
@@ -104,8 +103,6 @@ ext.libraries = [
     supportGridLayout           : "${bp.support}:gridlayout-v7:${versions.supportLibs}",
     supportRecyclerView         : "${bp.support}:recyclerview-v7:${versions.supportLibs}",
     supportAnnotations          : "${bp.support}:support-annotations:${versions.supportLibs}",
-    dataBindingAdapters         : "com.android.databinding:adapters:${versions.dataBinding}",
-    dataBindingLibrary          : "com.android.databinding:library:${versions.dataBinding}",
 
     // https://developers.google.com/android/guides/setup
     accountLogin                : "${bp.gs}:play-services-auth:${versions.googlePlayServices}",
