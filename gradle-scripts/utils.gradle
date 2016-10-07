@@ -1,21 +1,34 @@
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
-def final Date buildDate = new Date();
-project.ext.set("buildDate", buildDate)
-
-def long getBuildDateLong(Date date) {
-  return date.getTime();
+final class Globals {
+  static final String pattern = "yyyy-MM-dd HH:mm:ss Z";
+  static final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 }
 
-def String getBuildDateString(Date date) {
-  DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss z", Locale.getDefault());
+def long getBuildDateLong() {
+  return Globals.calendar.getTimeInMillis();
+}
+
+def String getBuildDateString() {
+  DateFormat dateFormat = new SimpleDateFormat(Globals.pattern, Locale.getDefault());
   dateFormat.setTimeZone(TimeZone.getDefault());
-  return dateFormat.format(date);
+  return dateFormat.format(Globals.calendar.getTime());
 }
 
 def gitLocalSha() {
   def p = 'git rev-parse --short HEAD'.execute([], project.rootDir)
+  p.waitFor()
+  if (p.exitValue() != 0) {
+    logger.warn(p.errorStream.text)
+    return "empty";
+  }
+
+  return p.text.trim()
+}
+
+def gitFullLocalSha() {
+  def p = 'git rev-parse HEAD'.execute([], project.rootDir)
   p.waitFor()
   if (p.exitValue() != 0) {
     logger.warn(p.errorStream.text)
@@ -33,21 +46,24 @@ def gitTimestamp() {
     return -1;
   }
 
-  return p.text.trim()
+  long timestamp = Long.parseLong(p.text.trim()) * 1000l
+
+  Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+  calendar.setTimeInMillis(timestamp)
+  calendar.add(Calendar.MILLISECOND, -calendar.getTimeZone().getOffset(calendar.getTimeInMillis()));
+
+  return calendar.getTimeInMillis()
 }
 
 def String gitTimestampString() {
-  def p = 'git log -n 1 --format=%at'.execute([], rootDir)
+  def p = 'git log -n 1 --format=%ai'.execute([], rootDir)
   p.waitFor()
   if (p.exitValue() != 0) {
     logger.warn(p.errorStream.text)
     return "empty";
   }
 
-  DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss z", Locale.getDefault());
-  dateFormat.setTimeZone(TimeZone.getDefault());
-
-  return dateFormat.format(new Date(1000L * Long.parseLong(p.text.trim())));
+  return p.text.trim()
 }
 
 def boolean isCi() {
@@ -64,6 +80,7 @@ ext {
   getBuildDateLong = this.&getBuildDateLong
   getBuildDateString = this.&getBuildDateString
   gitLocalSha = this.&gitLocalSha
+  gitFullLocalSha = this.&gitFullLocalSha
   gitTimestamp = this.&gitTimestamp
   gitTimestampString = this.&gitTimestampString
 }

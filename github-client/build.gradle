@@ -38,11 +38,12 @@ android {
   defaultConfig {
     applicationId "com.szagurskii.githubclient"
 
-    buildConfigField 'String', 'BUILD_DATE_STRING', "\"${getBuildDateString(project.buildDate)}\""
-    buildConfigField 'long', 'BUILD_DATE_LONG', "${getBuildDateLong(project.buildDate)}L"
+    buildConfigField 'long', 'BUILD_DATE_GMT', "${getBuildDateLong()}l"
+    buildConfigField 'String', 'BUILD_DATE_ISO', "\"${getBuildDateString()}\""
+    buildConfigField 'long', 'GIT_COMMIT_TIMESTAMP_GMT', "${gitTimestamp()}l"
+    buildConfigField 'String', 'GIT_COMMIT_TIMESTAMP_ISO', "\"${gitTimestampString()}\""
     buildConfigField 'String', 'GIT_SHA', "\"${gitLocalSha()}\""
-    buildConfigField 'long', 'GIT_UNIX_TIMESTAMP', "${gitTimestamp()}L"
-    buildConfigField 'String', 'GIT_TIMESTAMP_STRING', "\"${gitTimestampString()}\""
+    buildConfigField 'String', 'GIT_SHA_FULL', "\"${gitFullLocalSha()}\""
 
     minSdkVersion minSdk()
     targetSdkVersion versions.targetSdk
