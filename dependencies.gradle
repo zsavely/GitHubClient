@@ -60,7 +60,7 @@ ext.versions = [
     processPhoenix                : '1.0.2',
 
     // Gradle Plugins.
-    androidGradlePlugin           : '2.2.0',
+    androidGradlePlugin           : '2.2.1',
     googlePlayServicesGradlePlugin: '3.0.0',
     androidDevMetricsGradlePlugin : '0.4',
     androidRealmPlugin            : '1.0.0',
