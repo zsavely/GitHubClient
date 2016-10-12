@@ -48,8 +48,8 @@ notifications:
   email: true
 
 after_failure:
-  - "cat /home/travis/build/zsavely/ClipdAndroid/clipdapp/build/outputs/lint-results-debug.xml"
-  - "cat /home/travis/build/zsavely/ClipdAndroid/clipdapp/build/outputs/lint-results-release.xml"
+  - "cat /home/travis/build/zsavely/GitHubClient/github-client/build/outputs/lint-results-debug.xml"
+  - "cat /home/travis/build/zsavely/GitHubClient/github-client/build/outputs/lint-results-release.xml"
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
