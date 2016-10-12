@@ -1,5 +1,6 @@
 package com.szagurskii.githubclient;
 
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -21,6 +22,11 @@ public class ApplicationTest {
   }
 
   @Test public void shouldDisplayToolbarTitle() {
-    onView(withId(R.id.textview_helloworld)).check(matches(withText(R.string.hello_world)));
+    onView(withId(R.id.hello)).check(matches(withText(R.string.hello_world)));
+  }
+
+  @Test public void shouldChangeTextViewTitle() {
+    onView(withId(R.id.hello)).perform(ViewActions.click());
+    onView(withId(R.id.hello)).check(matches(withText("Hello Github")));
   }
 }
