@@ -9,6 +9,7 @@ ext.bp = [
     gs     : "com.google.android.gms",
     gms    : "com.google.gms",
     ir     : "io.realm",
+    kotlin : "org.jetbrains.kotlin",
 ]
 
 ext.versions = [
@@ -79,6 +80,9 @@ ext.versions = [
     supportTestRunner             : '0.5',
     espresso                      : '2.2.2',
     truth                         : '0.28',
+
+    // Kotlin
+    kotlin                        : '1.0.4',
 ]
 
 ext.gradlePlugins = [
@@ -93,6 +97,8 @@ ext.gradlePlugins = [
     dexCount            : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:${versions.dexCountGradlePlugin}",
     // https://github.com/ben-manes/gradle-versions-plugin
     gradleVersionsPlugin: "com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersionsPlugin}",
+    kotlin              : "${bp.kotlin}:kotlin-gradle-plugin:${versions.kotlin}",
+    kotlinx             : "${bp.kotlin}:kotlin-android-extensions:${versions.kotlin}"
 ]
 
 ext.libraries = [
@@ -184,6 +190,9 @@ ext.libraries = [
 
     // https://github.com/friendlyrobotnyc/TinyDancer
     tinyDancer                  : "com.github.brianPlummer:tinydancer:${versions.tinyDancer}",
+
+    // kotlin std
+    kotlin                      : "${bp.kotlin}:kotlin-stdlib:${versions.kotlin}",
 ]
 
 ext.testingLibraries = [
